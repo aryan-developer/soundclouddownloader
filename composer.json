@@ -1,6 +1,6 @@
 {
     "name": "aryan-developer/soundclouddownloader",
-    "type": "library",
+    "type": "project",
     "description": "a Library for download music from soundcloud easy :)",
     "license": "MIT",
     "keywords": ["soundcloud downloader", "download soundcloud", "download soundcloud music", "soundcloud","soundcloud-downloader"],
