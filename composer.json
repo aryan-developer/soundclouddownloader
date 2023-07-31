@@ -1,0 +1,19 @@
+{
+    "name": "aryan-developer/soundclouddownloader",
+    "type": "library",
+    "description": "a Library for download music from soundcloud easy :)",
+    "license": "MIT",
+    "keywords": ["soundcloud downloader", "download soundcloud", "download soundcloud music", "soundcloud","soundcloud-downloader"],
+    "authors": [
+        {
+            "name": "Aryan",
+            "email": "rynshirvani@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Aryan\\soundcloud\\" : "src"
+        }
+    },
+    "require": {}
+}
