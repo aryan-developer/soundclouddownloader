@@ -45,7 +45,7 @@ class SoundCloud extends HttpRequest
                 if ($music->kind == 'track' and $music->streamable) {
                     $musics[] = [
                         'id' => $music->id,
-                        "picture" => str_replace("large", "t300x300", $music->artwork_url) ?? $music->user->avatar_url,
+                        "picture" => str_replace("large", "original", $music->artwork_url) ?? $music->user->avatar_url,
                         "name" => $music->title,
                         'release' => $music->created_at,
                         'genre' => $music->genre,
@@ -60,7 +60,7 @@ class SoundCloud extends HttpRequest
         }
     }
 
-    public function getMusic(string $id, bool $exportOriginal = false): array|stdClass
+    public function getMusic(string $id, bool $exportOriginal = false): bool|stdClass|array
     {
         try {
             $musicData = json_decode(
@@ -77,12 +77,14 @@ class SoundCloud extends HttpRequest
                     )
                 )
             )[0];
-            if ($exportOriginal) {
+            if (is_null($musicData)) {
+                return false;
+            } elseif ($exportOriginal) {
                 return $musicData;
             } else {
                 return [
                     'status' => true,
-                    'picture' => str_replace("large", "t300x300", $musicData->artwork_url) ?? $musicData->user->avatar_url,
+                    'picture' => str_replace("large", "original", $musicData->artwork_url) ?? $musicData->user->avatar_url,
                     'title' => $musicData->title,
                     'release' => $musicData->created_at,
                     'genre' => $musicData->genre,
@@ -112,6 +114,27 @@ class SoundCloud extends HttpRequest
         );
         $urls = $this->exportUrl($data->url);
         $this->downloadAndPlay($urls, $trackName);
+    }
+
+    public function getMusicWithUrl(string $url): bool|stdClass|array
+    {
+        if (filter_var($url, FILTER_VALIDATE_URL) and
+            preg_match(
+                '/^https?:\/\/(?:www\.)?(?:m\.)?soundcloud\.com\/[a-zA-Z0-9-_]+\/[a-zA-Z0-9-_]+(?:\/)?/m',
+                $url,
+            )
+        ) {
+            $webPageContent = self::get($url);
+            preg_match_all('/soundcloud:\/\/sounds:(.*?)"/m', $webPageContent, $matches );
+            if (isset($matches[1][0])){
+                return $this->getMusic($matches[1][0]);
+            }else{
+                return false;
+            }
+        } else {
+            return false;
+        }
+        return false;
     }
 
     private function setClientId(): void

@@ -17,7 +17,14 @@ $musics = $soundCloud->searchMusic("tataloo man2");
  * Get Music detail from Music ID
  */
 var_dump(
-    $soundCloud->getMusic($musics[0]['id'])
+    $soundCloud->getMusic(5453455)
+);
+
+/**
+ * get Music Detail With SoundCloud Url
+ */
+var_dump(
+    $soundCloud->getMusicWithUrl("https://soundcloud.com/bahramnouraei/daagh")
 );
 
 /**
