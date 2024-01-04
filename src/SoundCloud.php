@@ -110,17 +110,16 @@ class SoundCloud extends HttpRequest
 
     public function getMusicWithUrl(string $url): bool|stdClass|array
     {
-        if (filter_var($url, FILTER_VALIDATE_URL) and
-            preg_match(
-                '/^https?:\/\/(?:www\.)?(?:m\.)?soundcloud\.com\/[a-zA-Z0-9-_]+\/[a-zA-Z0-9-_]+(?:\/)?/m',
-                $url,
+        if (filter_var($url, FILTER_VALIDATE_URL) and (
+                preg_match('/^https?:\/\/(?:www\.)?(?:m\.)?(?:on\.)?soundcloud\.com\/[a-zA-Z0-9-_]+\/[a-zA-Z0-9-_]+(?:\/)?/m', $url) or
+                preg_match('/^https?:\/\/(?:www\.)?(?:m\.)?(?:on\.)?soundcloud\.com\/[a-zA-Z0-9-_]+/m',$url)
             )
         ) {
-            $webPageContent = self::get($url);
-            preg_match_all('/soundcloud:\/\/sounds:(.*?)"/m', $webPageContent, $matches);
-            if (isset($matches[1][0])) {
+            $webPageContent = file_get_contents($url);
+            preg_match_all('/soundcloud:\/\/sounds:(.*?)"/m', $webPageContent, $matches );
+            if (isset($matches[1][0])){
                 return $this->getMusic($matches[1][0]);
-            } else {
+            }else{
                 return false;
             }
         } else {
