@@ -103,7 +103,7 @@ class SoundCloud extends HttpRequest
         if (!$directly) {
             $urls = $this->exportUrl($data->url);
         } else {
-            $urls = [$url];
+            $urls = [$data->url];
         }
         $this->downloadAndPlay($urls, $trackName);
     }
@@ -129,15 +129,16 @@ class SoundCloud extends HttpRequest
         return false;
     }
 
+
     /**
      * @param string $url
      * @param array $queryData
      * @return bool|mixed|string
      */
-    public function endpoint(string $url = "", array $queryData = []): bool|string|array
+    public function endpoint(string $url = "", array $queryData = [])
     {
         $backData = self::get("$url?" . self::arrayToUrlEncode($queryData));
-        return json_decode($backData, true);
+        return json_decode($backData);
     }
 
     private function setClientId(): void
